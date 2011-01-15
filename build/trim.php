@@ -5,6 +5,9 @@
  * @see http://pear.php.net/package/Archive_Tar
  */
 
+define("DEBUG", false);
+if (!DEBUG) exit("No debug.");
+
 $content = file_get_contents("Tar_137.php");
 
 // we only need functions to extract a tar file

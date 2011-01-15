@@ -65,10 +65,10 @@ foreach($settings as $key => $val) {
 if (is_dir("./simple_cache/") and !is_dir("./simple_store/")) dirs_delete_all("./simple_cache/");
 
 clearstatcache();
+$exclude = array("sgs_installer.php","simple_store","build","README.txt","license.txt");
 if (($dh = opendir("./"))) {
   while (($file = readdir($dh)) !== false) {
-  	if (!in_array($file[0],array(".","_")) and !in_array($file,array("sgs_installer.php","simple_store","build")) and
-		!strpos($file,".tar.gz")) {
+  	if (!in_array($file[0],array(".","_")) and !in_array($file,$exclude) and !strpos($file,".tar.gz")) {
 	  out_exit(sprintf("[3] {t}Please remove the folder %s{/t}", realpath($file)));
 } } }
 if (!is_writable("./")) out_exit(sprintf("[4] {t}Please give write access to %s{/t}",realpath("./")));
@@ -87,9 +87,9 @@ if (empty($_REQUEST["release"]) and empty($_REQUEST["cfile"])) {
 	  $check = true;
 	  
 	  if (!empty($match[2][$key])) {
-		preg_match("/php (\d+\.\d+\.\d+)/i", $match[2][$key], $match_version);
-		if (!empty($match_version[1]) and version_compare(PHP_VERSION, $match_version[1], "<")) {
-	      out(sprintf("{t}Setup needs php with at least version %s !{/t}", $match_version[1]));
+		preg_match("/php (\d+\.\d+\.\d+)/i", $match[2][$key], $match2);
+		if (!empty($match2[1]) and version_compare(PHP_VERSION, $match2[1], "<")) {
+	      out(sprintf("{t}Setup needs php with at least version %s !{/t}", $match2[1]));
 		  $check = false;
 		}
 	  }

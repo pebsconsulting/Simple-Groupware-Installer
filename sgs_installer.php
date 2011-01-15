@@ -67,7 +67,7 @@ if (is_dir("./simple_cache/") and !is_dir("./simple_store/")) dirs_delete_all(".
 clearstatcache();
 if (($dh = opendir("./"))) {
   while (($file = readdir($dh)) !== false) {
-  	if (!in_array($file[0],array(".","_")) and !in_array($file,array("sgs_installer.php","simple_store")) and
+  	if (!in_array($file[0],array(".","_")) and !in_array($file,array("sgs_installer.php","simple_store","build")) and
 		!strpos($file,".tar.gz")) {
 	  out_exit(sprintf("[3] {t}Please remove the folder %s{/t}", realpath($file)));
 } } }

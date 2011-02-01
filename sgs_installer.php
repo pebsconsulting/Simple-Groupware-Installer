@@ -213,7 +213,7 @@ function out_header() {
 	form { margin: 0px; }
 	</style></head>
 	<body>
-	<div class='border headline'>Simple Groupware Installer v6</div>
+	<div class='border headline'>Simple Groupware Installer v7</div>
   ");
 }
 function out_footer() {

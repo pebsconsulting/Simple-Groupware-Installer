@@ -76,9 +76,16 @@ if (!is_writable("./")) out_exit(sprintf("[4] {t}Please give write access to %s{
 if (empty($_REQUEST["release"]) and empty($_REQUEST["cfile"])) {
   out("{t}Downloading list{/t} ...<br/>");
   $url = "http://sourceforge.net/export/rss2_projnews.php?group_id=96330";
-  $data = @file_get_contents($url);
-  if ($data!="") preg_match_all("!<title>simple groupware ([^ ]+) released.*?</title>.*?<pubdate>([^<]+)!msi", $data, $match);
-  
+  $ctx = stream_context_create(array("http" => array("timeout" => 5))); 
+  $data = @file_get_contents($url,0,$ctx);
+  if ($data!="" and strpos($data, "Simple Groupware")) {
+	preg_match_all("!<title>simple groupware ([^ ]+) released.*?</title>.*?<pubdate>([^<]+)!msi", $data, $match);
+  } else {
+	$url = "http://code.google.com/feeds/p/simplegroupware/downloads/basic";
+	$data = @file_get_contents($url);
+	preg_match_all("!simplegroupware_(.+?)\.tar\.gz.+?<updated>([^<]+)!msi", $data, $match);
+  }
+
   if (!empty($match[1]) and $data!="") {
     foreach ($match[1] as $key=>$item) {
 
@@ -93,7 +100,10 @@ if (empty($_REQUEST["release"]) and empty($_REQUEST["cfile"])) {
 		  $check = false;
 		}
 	  }
-	  if ($check) out("<a href='sgs_installer.php?release=".$item."'>{t}I n s t a l l{/t}</a>&nbsp; Simple Groupware ", false);
+	  if ($check) {
+		out("<a href='sgs_installer.php?release=".$item."'>{t}I n s t a l l{/t}</a> ", false);
+		out("(<a href='sgs_installer.php?mirror&release=".$item."'>{t}Mirror{/t}</a>) Simple Groupware ", false);
+	  }
 	  out($item." (<a target='_blank' href='http://www.simple-groupware.de/cms/Release-".str_replace(".","-",$item)."'>Changelog</a>)<br>");
 	}
   } else {
@@ -118,6 +128,9 @@ if (empty($_REQUEST["release"]) and empty($_REQUEST["cfile"])) {
   if (!file_exists($source) or filesize($source) < 3*1024*1024) out_exit("[5] {t}Error{/t}: file-check [0] ".$source);
 } else {
   $source = "http://sourceforge.net/projects/simplgroup/files/simplegroupware/{$_REQUEST["release"]}/SimpleGroupware_{$_REQUEST["release"]}.tar.gz/download";
+  if (isset($_REQUEST["mirror"])) {
+	$source = "http://simplegroupware.googlecode.com/files/SimpleGroupware_{$_REQUEST["release"]}.tar.gz";
+  }
 }
 
 $temp_folder = "simple_cache/installer/";

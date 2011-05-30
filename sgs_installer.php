@@ -79,7 +79,13 @@ if (($dh = opendir("./"))) {
   	if (!in_array($file[0],array(".","_")) and !in_array($file,$exclude) and !strpos($file,".tar.gz")) {
 	  out_exit(sprintf("[3] {t}Please remove the folder %s{/t}", realpath($file)));
 } } }
-if (!is_writable("./")) out_exit(sprintf("[4] {t}Please give write access to %s{/t}",realpath("./")));
+if (!is_writable("./")) {
+  $message = sprintf("[4] {t}Please give write access to %s{/t}",realpath("./"));
+  if (strpos(PHP_OS,"WIN")===false) {
+	$message .= "<br>".sprintf("{t}If file system permissions are ok, please check the configs of %s if present.{/t}", "SELinux, suPHP, Suhosin");
+  }
+  out_exit($message);
+}
 
 if (empty($_REQUEST["release"]) and empty($_REQUEST["cfile"])) {
   out("{t}Downloading list{/t} ...<br/>");

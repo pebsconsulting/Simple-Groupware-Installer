@@ -45,8 +45,16 @@ header("Cache-Control: private, max-age=1, must-revalidate");
 header("Pragma: no-cache");
 out_header();
 
+$phpversion = "5.2.0";
+if (version_compare(PHP_VERSION, $phpversion, "<")) {
+  out_exit(sprintf("{t}Setup needs php with at least version %s !{/t} (".PHP_VERSION.")",$phpversion),3);
+}
+
 $extensions_sys = get_loaded_extensions();
-foreach(array("pcre", "zlib") as $key => $val) if (!in_array($val, $extensions_sys)) out_exit(sprintf("[0] {t}Setup needs php-extension with name %s !{/t}", $val));
+foreach(array("pcre", "zlib") as $key => $val) {
+  if (in_array($val, $extensions_sys)) continue;
+  out_exit(sprintf("[0] {t}Setup needs php-extension with name %s !{/t}", $val));
+}
 
 $memory_min = 4000000;
 $memory_min_str = str_replace("000000","M",$memory_min);

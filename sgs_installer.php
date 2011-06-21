@@ -82,7 +82,7 @@ if (($dh = opendir("./"))) {
 if (!is_writable("./")) {
   $message = sprintf("[4] {t}Please give write access to %s{/t}",realpath("./"));
   if (strpos(PHP_OS,"WIN")===false) {
-	$message .= "<br>".sprintf("{t}If file system permissions are ok, please check the configs of %s if present.{/t}", "SELinux, suPHP, Suhosin");
+	$message .= "<br>".sprintf("{t}If file system permissions are ok, please check the configurations of %s if present.{/t}", "SELinux, suPHP, Suhosin");
   }
   out_exit($message);
 }

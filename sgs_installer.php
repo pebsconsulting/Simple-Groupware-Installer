@@ -2,7 +2,7 @@
 /**
  * Simple Groupware
  * http://www.simple-groupware.de
- * Copyright (C) 2002-2011 by Thomas Bley
+ * Copyright (C) 2002-2012 by Thomas Bley
  *
  *
  * Archive_Tar 1.3.7
@@ -82,7 +82,7 @@ if (($dh = opendir("./"))) {
 if (!is_writable("./")) {
   $message = sprintf("[4] {t}Please give write access to %s{/t}",realpath("./"));
   if (strpos(PHP_OS,"WIN")===false) {
-	$message .= "<br>".sprintf("{t}If file system permissions are ok, please check the configurations of %s if present.{/t}", "SELinux, suPHP, Suhosin");
+	$message .= sprintf("{t}If file system permissions are ok, please check the configurations of %s if present.{/t}", "SELinux, suPHP, Suhosin");
   }
   out_exit($message);
 }
@@ -121,7 +121,7 @@ if (empty($_REQUEST["release"]) and empty($_REQUEST["cfile"])) {
 	  out($item." (<a target='_blank' href='http://www.simple-groupware.de/cms/Release-".str_replace(".","-",$item)."'>Changelog</a>)<br>");
 	}
   } else {
-    out("{t}Error{/t}: {t}connection failed{/t} ".$url."<br/>".strip_tags($data,"<br><p><h1><center>"));
+    out(sprintf("{t}Connection error: %s [%s]{/t}", $url, "HTTP")."<br/>".strip_tags($data,"<br><p><h1><center>"));
   }
   out("<br/>{t}Package from local file system (.tar.gz){/t}:<br/>{t}current path{/t}: ".str_replace("\\","/",getcwd())."/<br/>");
   
@@ -205,7 +205,7 @@ function out($str="",$nl=true) {
 }
 
 function out_exit($str) {
-  out($str);
+  out(htmlspecialchars($str,ENT_QUOTES));
   out("<br/><a href='sgs_installer.php'>{t}Relaunch Installer{/t}</a><br/>");
   out_footer();
   exit;
@@ -218,8 +218,8 @@ function out_header() {
 	<style>
 	body, h2, img, div, table.data, a { background-color: #FFFFFF; color: #666666; font-size: 13px; font-family: Arial, Helvetica, Verdana, sans-serif; }
 	a,input { color: #0000FF; }
-	input { font-size: 11px; background-color: #F5F5F5; border: 1px solid #AAAAAA; height: 18px; vertical-align: middle; padding-left: 5px; padding-right: 5px;
-			-moz-border-radius:10px; -webkit-border-radius:8px; border-radius:10px; }
+	input { font-size: 11px; background-color: #F5F5F5; border: 1px solid #AAAAAA; height: 18px; vertical-align: middle;
+			padding-left: 5px; padding-right: 5px; border-radius: 10px; }
 	.checkbox, .radio { border: 0px; background-color: transparent; }
 	.submit { color: #0000FF; background-color: #FFFFFF; width: 125px; font-weight: bold; }
 	.border { border-bottom: 1px solid black; }

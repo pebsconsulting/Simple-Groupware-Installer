@@ -92,10 +92,11 @@ if (empty($_REQUEST["release"]) and empty($_REQUEST["cfile"])) {
   $url = "http://sourceforge.net/export/rss2_projnews.php?group_id=96330";
   $ctx = stream_context_create(array("http" => array("timeout" => 5))); 
   $data = @file_get_contents($url,0,$ctx);
+  $match = array();
   if ($data!="" and strpos($data, "Simple Groupware")) {
 	preg_match_all("!<title>simple groupware ([^ ]+) released.*?</title>.*?<pubdate>([^<]+)!msi", $data, $match);
   } else {
-	$url = "http://code.google.com/feeds/p/simplegroupware/downloads/basic";
+	$url = "https://code.google.com/feeds/p/simplegroupware/downloads/basic";
 	$data = @file_get_contents($url);
 	preg_match_all("!simplegroupware_(.+?)\.tar\.gz.+?<updated>([^<]+)!msi", $data, $match);
   }
@@ -108,6 +109,7 @@ if (empty($_REQUEST["release"]) and empty($_REQUEST["cfile"])) {
 	  $check = true;
 	  
 	  if (!empty($match[2][$key])) {
+		$match2 = array();
 		preg_match("/php (\d+\.\d+\.\d+)/i", $match[2][$key], $match2);
 		if (!empty($match2[1]) and version_compare(PHP_VERSION, $match2[1], "<")) {
 	      out(sprintf("{t}Setup needs php with at least version %s !{/t}", $match2[1]));
@@ -143,7 +145,7 @@ if (empty($_REQUEST["release"]) and empty($_REQUEST["cfile"])) {
 } else {
   $source = "http://sourceforge.net/projects/simplgroup/files/simplegroupware/{$_REQUEST["release"]}/SimpleGroupware_{$_REQUEST["release"]}.tar.gz/download";
   if (isset($_REQUEST["mirror"])) {
-	$source = "http://simplegroupware.googlecode.com/files/SimpleGroupware_{$_REQUEST["release"]}.tar.gz";
+	$source = "https://simplegroupware.googlecode.com/files/SimpleGroupware_{$_REQUEST["release"]}.tar.gz";
   }
 }
 
